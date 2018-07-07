@@ -25,7 +25,7 @@ const p5 = new P5((sk) => {
 
         stack.push(StackFactory([0, 0], [config.NUMBER_OF_CELLS_AND_ROWS - 1, config.NUMBER_OF_CELLS_AND_ROWS - 1]));
 
-        sk.frameRate(15);
+        sk.frameRate(100);
 
         window.setSpeed = function(sk, fps) {
             sk.frameRate(fps);
