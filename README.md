@@ -7,7 +7,7 @@ To change size you have to change `NUMBER_OF_CELLS_AND_ROWS` property in `src/co
 
 ## Commands
 
-`npm start` - start webpack dev server
+`npm start` - start webpack dev server <br>
 `npm run build` - build project to `dist`directory
 
 ## Examples
