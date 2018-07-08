@@ -47,13 +47,11 @@ const p5 = new P5((sk) => {
         if(/*n && */(stack.length)) {
             divisionGrid();
             n = false;
-            console.log([].concat(stack));
 
         }
 
         if(!stack.length && firstEnd) {
             endTime = new Date();
-
             console.log('time:', endTime - startTime);
             firstEnd = false;
         }
@@ -63,7 +61,6 @@ const p5 = new P5((sk) => {
 
 
 function divisionGrid(currentPart) {
-    console.log([].concat(stack));
     currentPart = currentPart || stack.pop();
     if(!currentPart) {
         return;
@@ -72,8 +69,6 @@ function divisionGrid(currentPart) {
     const end = currentPart.end;
 
     if (isHorizontalMode(start, end)) {
-        console.log('horizontal');
-
         const cutIndex = getIntRandom(start[1], end[1]);
 
         if(cutIndex < 0) {
@@ -95,7 +90,6 @@ function divisionGrid(currentPart) {
 
         addToStackHorizontal(start, end, cutIndex);
     } else {
-        console.log('vertical');
         const cutIndex = getIntRandom(start[0], end[0]);
 
         if(cutIndex < 0) {
@@ -106,7 +100,6 @@ function divisionGrid(currentPart) {
 
         for (let index = start[1]; index <= end[1] && index < config.NUMBER_OF_CELLS_AND_ROWS; index++) {
             const cellIndex = getCellIndexByCoordinates(cutIndex, index);
-            console.log(cellIndex);
 
             line.push(grid[cellIndex]);
             grid[cellIndex].show(Cell.RIGHT);
@@ -118,8 +111,6 @@ function divisionGrid(currentPart) {
 
         addToStackVertical(start, end, cutIndex)
     }
-
-    console.log(lines[lines.length-1])
 }
 
 
@@ -168,7 +159,6 @@ function addToStackVertical(start, end, cutIndex) {
 }
 
 function addToStack(start, end) {
-    console.log('ibe', start, end, isBigEnough(start, end));
     if (isBigEnough(start, end)) {
         stack.push(StackFactory(start, end));
     }
