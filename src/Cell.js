@@ -1,12 +1,9 @@
-import * as config from './config';
-
-const width = config.cellWidth;
-const height = config.cellHeight;
+import CellService from './CellService'
 
 class Cell {
     constructor(column, row) {
-        this.x = column * width;
-        this.y = row * height;
+        this.x = column * CellService.width;
+        this.y = row * CellService.height;
         this.lines = [false, false, false, false];
         this.gaps = [false, false, false, false];
     }
@@ -73,19 +70,19 @@ class Cell {
     }
 
     drawTop(sk) {
-        sk.line(this.x, this.y, this.x + width, this.y)
+        sk.line(this.x, this.y, this.x + CellService.width, this.y)
     }
 
     drawRight(sk) {
-        sk.line(this.x + width, this.y, this.x + width , this.y + height)
+        sk.line(this.x + CellService.width, this.y, this.x + CellService.width , this.y + CellService.height)
     }
 
     drawBottom(sk) {
-        sk.line(this.x + width, this.y + height, this.x, this.y + height)
+        sk.line(this.x + CellService.width, this.y + CellService.height, this.x, this.y + CellService.height)
     }
 
     drawLeft(sk) {
-        sk.line(this.x, this.y + height, this.x, this.y)
+        sk.line(this.x, this.y + CellService.height, this.x, this.y)
     }
 
     show(direction) {
