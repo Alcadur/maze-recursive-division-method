@@ -2,9 +2,11 @@
 
 This is maze generator using Recursive division method ([wiki](https://en.wikipedia.org/wiki/Maze_generation_algorithm))
 
-Currently after open `index.html` from `dist` it will start generate maze with size 50x50. 
-To change size you have to change `NUMBER_OF_CELLS_AND_ROWS` property in `src/config.js` and rebuild or start dev server.
 
+To generate maze you can enter one size (default size: 50) and click `generate` button to start.
+You can change size any time but any progress will be lost.
+
+There is no need to run any server, just download `dist` content and open `index.html`
 ## Commands
 
 `npm start` - start webpack dev server <br>
