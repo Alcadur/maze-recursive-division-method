@@ -1,5 +1,4 @@
 import MathService from './MathService';
-import * as config from './config';
 
 export default {
     isHorizontalMode(start, end) {
@@ -38,7 +37,6 @@ export default {
         } else {
             cell.markAsGap(direction);
         }
-
 
     }
 }

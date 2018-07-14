@@ -83,4 +83,8 @@ export default class Grid {
         }
     }
 
+    getCell(x, y) {
+        return this.board[GridService.getCellIndexByCoordinates(x, y, this.sizeX)];
+    }
+
 }

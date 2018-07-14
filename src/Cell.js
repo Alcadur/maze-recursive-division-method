@@ -70,19 +70,19 @@ class Cell {
     }
 
     drawTop(sk) {
-        sk.line(this.x, this.y, this.x + CellService.width, this.y)
+        sk.line(this.x, this.y, this.x + CellService.width - 1, this.y)
     }
 
     drawRight(sk) {
-        sk.line(this.x + CellService.width, this.y, this.x + CellService.width , this.y + CellService.height)
+        sk.line(this.x + CellService.width - 1, this.y, this.x + CellService.width  - 1, this.y + CellService.height - 1)
     }
 
     drawBottom(sk) {
-        sk.line(this.x + CellService.width, this.y + CellService.height, this.x, this.y + CellService.height)
+        sk.line(this.x + CellService.width - 1, this.y + CellService.height - 1, this.x, this.y + CellService.height - 1)
     }
 
     drawLeft(sk) {
-        sk.line(this.x, this.y + CellService.height, this.x, this.y)
+        sk.line(this.x, this.y + CellService.height - 1, this.x, this.y)
     }
 
     show(direction) {
