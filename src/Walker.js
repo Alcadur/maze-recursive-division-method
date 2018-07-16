@@ -8,6 +8,7 @@ export default class Walker {
     constructor(sk, start, end) {
         this.isFinish = false;
         this.isInstant = false;
+        this.startTime = new Date();
         this.end = end;
         this.maze = sk.getGrid();
         const startTrace = new Trace(start[0], start[1], CellService.getCellPassage(this.maze, [start[0], start[1]]));
@@ -60,6 +61,9 @@ export default class Walker {
 
         if(nextTrace.x === this.end[0] && nextTrace.y === this.end[1]) {
             this.isFinish = true;
+            const endTime = new Date();
+
+            console.log('time', endTime - this.startTime);
         }
     }
 
