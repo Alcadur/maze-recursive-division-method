@@ -5,7 +5,8 @@ import Cell from './Cell';
 import TraceService from './TraceService';
 
 export default class Walker {
-    constructor(sk, start, end) {
+    constructor(sk, start, end, sizeModifier = 1) {
+        this.sizeModifier = sizeModifier;
         this.isFinish = false;
         this.isInstant = false;
         this.startTime = new Date();
@@ -126,10 +127,10 @@ export default class Walker {
         sk.noStroke();
         this.traces.forEach((trace) => {
             this.fillStrategy(sk, trace);
-            const x = trace.x * CellService.width;
-            const y = trace.y * CellService.height;
+            const x = trace.x * CellService.getWidth(this.sizeModifier);
+            const y = trace.y * CellService.getHeight(this.sizeModifier);
 
-            sk.rect(x, y, CellService.width , CellService.height);
+            sk.rect(x, y, CellService.getWidth(this.sizeModifier) , CellService.getHeight(this.sizeModifier));
         });
 
         if(!this.isInstant) {

@@ -2,8 +2,10 @@ import P5Factory from './P5Factory';
 import * as config from './config';
 import CellService from './CellService';
 import Walker from './Walker';
+import RenderService from './RenderService';
 
-let p5;
+let p5Image;
+let p5Draw;
 
 document.getElementById('mazeSize').value = 10;
 
@@ -17,13 +19,19 @@ document.getElementById('generateButton').addEventListener('click', () => {
         generateInstant.remove();
     }
 
-    if(!p5) {
-        p5 = P5Factory(size);
+    if(!p5Image) {
+        p5Image = P5Factory(size);
+        RenderService.targetP5 = p5Image;
+        p5Draw = P5Factory(size, { drawModifier: config.DRAW_SIZE_MODIFIER });
+        RenderService.srcP5 = p5Draw;
+        p5Draw.draw();
+        p5Draw.canvas.style.display = 'none';
         return;
     }
 
 
-    p5.generateNewGrid(size);
+    p5Draw.generateNewGrid(size);
+    p5Image.generateNewGrid(size);
 });
 
 document.getElementById('generateInstant').addEventListener('click', () => {
@@ -35,25 +43,24 @@ document.getElementById('generateInstant').addEventListener('click', () => {
         generateButton.remove();
     }
 
-    if(!p5) {
-        p5 = P5Factory(size, true);
+    if(!p5Image) {
+        p5Image = P5Factory(size, { isInstantMode: true });
         return;
     }
 
-
-    p5.generateNewGrid(size, true);
+    p5Image.generateNewGrid(size, true);
 });
 
 document.getElementById('walkthrough').addEventListener('click', () => {
-    const grid = p5.getGrid();
-    const walker = new Walker(p5, [0, 0], [grid.sizeX - 1, grid.sizeY - 1]);
+    const grid = p5Image.getGrid();
+    const walker = new Walker(p5Image, [0, 0], [grid.sizeX - 1, grid.sizeY - 1]);
 
     walker.nextStep();
 });
 
 document.getElementById('solution').addEventListener('click', () => {
-    const grid = p5.getGrid();
-    const walker = new Walker(p5, [0, 0], [grid.sizeX - 1, grid.sizeY - 1]);
+    const grid = p5Image.getGrid();
+    const walker = new Walker(p5Image, [0, 0], [grid.sizeX - 1, grid.sizeY - 1]);
 
     walker.instantResolve();
 });

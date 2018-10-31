@@ -2,12 +2,18 @@ import * as config from './config';
 import Cell from './Cell';
 import TraceService from './TraceService';
 
-export default {
+export default  {
     width: config.cellWidth,
     height: config.cellHeight,
     countNewSize(sizeX, sizeY) {
         this.width = Math.floor(config.WIDTH/sizeX);
         this.height = Math.floor(config.HEIGHT/sizeY);
+    },
+    getWidth(modifier) {
+        return this.width * modifier;
+    },
+    getHeight(modifier) {
+        return this.height * modifier;
     },
     getCellPassage(maze, cellCoordinates) {
         const x = cellCoordinates[0];

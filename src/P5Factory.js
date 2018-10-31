@@ -2,26 +2,29 @@ import P5 from 'p5';
 import Grid from './Grid';
 import * as config from './config';
 import Cell from './Cell';
+import ImageService from './RenderService'
 
-export default function(gridSize, isInstantMode) {
+export default function(gridSize, { isInstantMode = false, drawModifier = 1 } = {}) {
     let startTime;
     let endTime;
     let firstEnd = true;
     const injectedDrawMethods = [];
+    const canvasWidth = config.WIDTH * drawModifier;
+    const canvasHeight = config.HEIGHT *    drawModifier;
 
     const p5 = new P5((sk) => {
         sk.setup = () => {
-            sk.createCanvas(config.WIDTH, config.HEIGHT);
+            sk.createCanvas(canvasWidth, canvasHeight);
 
-            sk.grid = new Grid(gridSize || config.NUMBER_OF_CELLS_AND_ROWS);
-
-            sk.frameRate(60);
+            sk.grid = new Grid(gridSize || config.NUMBER_OF_CELLS_AND_ROWS, drawModifier);
 
             while(isInstantMode && sk.grid.stack.length) {
                 sk.grid.divisionGrid();
             }
 
             setOuterBorders(sk.grid);
+
+            sk.noLoop();
 
             startTime = new Date();
         };
@@ -39,12 +42,18 @@ export default function(gridSize, isInstantMode) {
         }
 
         sk.draw = () => {
+            if (ImageService.amITarget(sk)) {
+                sk.noTint();
+                return;
+            }
+
             const grid = sk.grid;
+            sk.background(158);
+
             if(!grid) {
                 return;
             }
 
-            sk.background(158);
 
             injectedDrawMethods.forEach((method) => method(sk));
 
@@ -59,12 +68,25 @@ export default function(gridSize, isInstantMode) {
                 endTime = new Date();
                 console.log('time:', endTime - startTime);
                 firstEnd = false;
-
             }
+
+            ImageService.update(sk.draw);
+
+            // if(!grid.stack.length) {
+            //     background = background || sk.canvas.toDataURL();
+            //
+            //     sk.loadImage(background, (img) => {
+            //         const styles = window.getComputedStyle(sk.canvas)
+            //         const width = +styles.width.replace(/\D/g, '');
+            //         const height = +styles.height.replace(/\D/g, '');
+            //         // sk.image(img, 0, 0, sk.canvas.width/2, sk.canvas.height/2);
+            //         sk.image(img, 0, 0, width, height);
+            //     })
+            // }
         };
 
         sk.generateNewGrid = (gridSize) => {
-            sk.grid = new Grid(gridSize || config.NUMBER_OF_CELLS_AND_ROWS);
+            sk.grid = new Grid(gridSize || config.NUMBER_OF_CELLS_AND_ROWS, drawModifier);
 
             while(isInstantMode && sk.grid.stack.length) {
                 sk.grid.divisionGrid();

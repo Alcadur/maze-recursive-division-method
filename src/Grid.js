@@ -4,19 +4,19 @@ import MathService from './MathService';
 import StackItemFactory from './StackItemFactory'
 
 export default class Grid {
-    constructor(sizeX, sizeY = sizeX) {
+    constructor(sizeX, drawModifier) {
         this.sizeX= sizeX;
-        this.sizeY = sizeY;
+        this.sizeY = sizeX;
         this.stack = [];
         this.board = [];
 
-        for (let rowIndex = 0; rowIndex < sizeY; rowIndex++) {
+        for (let rowIndex = 0; rowIndex < this.sizeY; rowIndex++) {
             for (let columnIndex = 0; columnIndex < sizeX; columnIndex++) {
-                this.board.push(new Cell(columnIndex, rowIndex))
+                this.board.push(new Cell(columnIndex, rowIndex, drawModifier))
             }
         }
 
-        this.stack.push(StackItemFactory([0, 0], [sizeX - 1, sizeY - 1]));
+        this.stack.push(StackItemFactory([0, 0], [sizeX - 1, this.sizeY - 1]));
     }
 
     divisionGrid(currentPart ) {

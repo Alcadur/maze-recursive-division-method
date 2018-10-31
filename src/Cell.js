@@ -1,9 +1,10 @@
 import CellService from './CellService'
 
 class Cell {
-    constructor(column, row) {
-        this.x = column * CellService.width;
-        this.y = row * CellService.height;
+    constructor(column, row, sizeModifier = 1) {
+        this.sizeModifier = sizeModifier;
+        this.x = column * CellService.getWidth(sizeModifier);
+        this.y = row * CellService.getHeight(sizeModifier);
         this.lines = [false, false, false, false];
         this.gaps = [false, false, false, false];
     }
@@ -70,19 +71,19 @@ class Cell {
     }
 
     drawTop(sk) {
-        sk.line(this.x, this.y, this.x + CellService.width - 1, this.y)
+        sk.line(this.x, this.y, this.x + CellService.getWidth(this.sizeModifier) - 1, this.y)
     }
 
     drawRight(sk) {
-        sk.line(this.x + CellService.width - 1, this.y, this.x + CellService.width  - 1, this.y + CellService.height - 1)
+        sk.line(this.x + CellService.getWidth(this.sizeModifier) - 1, this.y, this.x + CellService.getWidth(this.sizeModifier)  - 1, this.y + CellService.getHeight(this.sizeModifier) - 1)
     }
 
     drawBottom(sk) {
-        sk.line(this.x + CellService.width - 1, this.y + CellService.height - 1, this.x, this.y + CellService.height - 1)
+        sk.line(this.x + CellService.getWidth(this.sizeModifier) - 1, this.y + CellService.getHeight(this.sizeModifier) - 1, this.x, this.y + CellService.getHeight(this.sizeModifier) - 1)
     }
 
     drawLeft(sk) {
-        sk.line(this.x, this.y + CellService.height - 1, this.x, this.y)
+        sk.line(this.x, this.y + CellService.getHeight(this.sizeModifier) - 1, this.x, this.y)
     }
 
     show(direction) {
