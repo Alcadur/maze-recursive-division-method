@@ -3,6 +3,7 @@ import Trace from './Trace';
 import CellService from './CellService';
 import Cell from './Cell';
 import TraceService from './TraceService';
+import RenderService from './RenderService';
 
 export default class Walker {
     constructor(sk, start, end, sizeModifier = 1) {
@@ -12,14 +13,12 @@ export default class Walker {
         this.startTime = new Date();
         this.end = end;
         this.maze = sk.getGrid();
+        this.sk = sk;
         const startTrace = new Trace(start[0], start[1], CellService.getCellPassage(this.maze, [start[0], start[1]]));
+        this.solution = [];
         this.stack = [startTrace];
         this.traces = [startTrace];
         this.currentTrace = startTrace;
-
-        sk.injectExtraDraw(this.draw.bind(this));
-
-        sk.frameRate(60);
     }
 
     instantResolve() {
@@ -28,6 +27,18 @@ export default class Walker {
         while(!this.isFinish) {
             this.nextStep();
         }
+
+        this.start();
+    }
+
+    start() {
+        RenderService.drawSnap(this.sk);
+
+        RenderService.nextFrame({
+            draw: this.draw.bind(this, this.sk),
+            next: this.nextStep.bind(this),
+            stack: this.stack
+        })
     }
 
     nextStep() {
@@ -43,6 +54,7 @@ export default class Walker {
         if (!nextTrace) {
             const prevTrace = this.stack.pop();
             this.currentTrace.markAsWrong();
+            this.traces.push(this.currentTrace);
             this.currentTrace = prevTrace;
             this.currentTrace.current = true;
 
@@ -58,11 +70,14 @@ export default class Walker {
         this.currentTrace.current = true;
 
         this.traces.push(nextTrace);
+        this.traces.push(this.stack[this.stack.length - 1]);
         this.stack.push(nextTrace);
 
         if(nextTrace.x === this.end[0] && nextTrace.y === this.end[1]) {
             this.isFinish = true;
             const endTime = new Date();
+            this.solution = [...this.stack]
+            this.stack.length = 0;
 
             console.log('time', endTime - this.startTime);
         }
@@ -125,19 +140,37 @@ export default class Walker {
 
     draw(sk) {
         sk.noStroke();
-        this.traces.forEach((trace) => {
-            this.fillStrategy(sk, trace);
-            const x = trace.x * CellService.getWidth(this.sizeModifier);
-            const y = trace.y * CellService.getHeight(this.sizeModifier);
+        RenderService.drawSnap(sk);
 
-            sk.rect(x, y, CellService.getWidth(this.sizeModifier) , CellService.getHeight(this.sizeModifier));
-        });
-
-        if(!this.isInstant) {
-            this.nextStep();
+        if (this.isInstant) {
+            this.drawSolution(sk);
+        } else {
+            this.drawTraces(sk);
         }
     }
 
+    drawSolution(sk) {
+        this.solution.forEach(step => this.drawTrace(sk, step));
+    }
+
+    drawTraces (sk) {
+        const trace = this.traces.shift();
+        if (!trace) {
+            return;
+        }
+
+        this.drawTrace(sk, trace);
+
+        this.drawTraces(sk);
+    }
+
+    drawTrace(sk, trace) {
+        this.fillStrategy(sk, trace);
+        const x = trace.x * CellService.getWidth(this.sizeModifier) + 1;
+        const y = trace.y * CellService.getHeight(this.sizeModifier) + 1;
+
+        sk.rect(x, y, CellService.getWidth(this.sizeModifier) - 2 , CellService.getHeight(this.sizeModifier) - 2);
+    }
     /**
      * @param sk
      * @param {Trace} trace

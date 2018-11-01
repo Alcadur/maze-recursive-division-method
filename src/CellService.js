@@ -46,7 +46,6 @@ export default  {
 
             if (obj.index === Cell.LEFT) {
                 neighborCell = maze.getCell(x - 1, y);
-
             }
 
             if(!neighborCell.gaps[neighborDirection] && neighborCell.lines[neighborDirection]) {

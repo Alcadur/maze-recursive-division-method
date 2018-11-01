@@ -9,6 +9,7 @@ export default class Grid {
         this.sizeY = sizeX;
         this.stack = [];
         this.board = [];
+        this.changeCells = [];
 
         for (let rowIndex = 0; rowIndex < this.sizeY; rowIndex++) {
             for (let columnIndex = 0; columnIndex < sizeX; columnIndex++) {
@@ -19,7 +20,7 @@ export default class Grid {
         this.stack.push(StackItemFactory([0, 0], [sizeX - 1, this.sizeY - 1]));
     }
 
-    divisionGrid(currentPart ) {
+    divisionGrid(currentPart) {
         currentPart = currentPart || this.stack.pop();
         if(!currentPart) {
             return;
@@ -40,6 +41,7 @@ export default class Grid {
                 const cell = this.board[cellIndex];
                 line.push(cell);
                 cell.show(Cell.BOTTOM);
+                this.changeCells.push(cell);
             }
 
             GridService.makeGap(line, Cell.BOTTOM);
@@ -59,6 +61,7 @@ export default class Grid {
                 const cell = this.board[cellIndex];
                 line.push(cell);
                 cell.show(Cell.RIGHT);
+                this.changeCells.push(cell);
             }
 
             GridService.makeGap(line, Cell.RIGHT);

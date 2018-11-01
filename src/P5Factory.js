@@ -2,9 +2,8 @@ import P5 from 'p5';
 import Grid from './Grid';
 import * as config from './config';
 import Cell from './Cell';
-import ImageService from './RenderService'
-
-export default function(gridSize, { isInstantMode = false, drawModifier = 1 } = {}) {
+import RenderService from './RenderService'
+export default function(gridSize, { drawModifier = 1 } = {}) {
     let startTime;
     let endTime;
     let firstEnd = true;
@@ -18,18 +17,52 @@ export default function(gridSize, { isInstantMode = false, drawModifier = 1 } = 
 
             sk.grid = new Grid(gridSize || config.NUMBER_OF_CELLS_AND_ROWS, drawModifier);
 
-            while(isInstantMode && sk.grid.stack.length) {
-                sk.grid.divisionGrid();
-            }
-
-            setOuterBorders(sk.grid);
-
             sk.noLoop();
 
             startTime = new Date();
         };
 
-        function setOuterBorders(grid) {
+        sk.draw = () => {
+            RenderService.drawSnap(sk);
+
+            if (RenderService.amITarget(sk)) {
+                return;
+            }
+
+            injectedDrawMethods.forEach((method) => method(sk));
+
+            const grid = sk.grid;
+
+            if(!grid) {
+                return;
+            }
+
+            sk.applyChanges(grid.changeCells);
+
+            if(!grid.stack.length && firstEnd) {
+                endTime = new Date();
+                console.log('time:', endTime - startTime);
+                firstEnd = false;
+            }
+        };
+
+        /**
+         * @param {array} changedCells
+         */
+        sk.applyChanges = (changedCells) => {
+            if (changedCells.length) {
+                changedCells.pop().draw(sk);
+                sk.applyChanges(changedCells);
+            }
+        };
+
+        sk.setGrid = (newGrid) => {
+            sk.grid = newGrid;
+        };
+
+        sk.drawBorders = () => {
+            const grid = sk.grid;
+
             for (let index = 0; index < grid.sizeX; index++) {
                 grid.getCell(index, 0).lines[Cell.TOP] = true;
                 grid.getCell(index, grid.sizeY - 1).lines[Cell.BOTTOM] = true;
@@ -39,65 +72,15 @@ export default function(gridSize, { isInstantMode = false, drawModifier = 1 } = 
                 grid.getCell(0, index).lines[Cell.LEFT] = true;
                 grid.getCell(grid.sizeX - 1, index).lines[Cell.RIGHT] = true;
             }
-        }
 
-        sk.draw = () => {
-            if (ImageService.amITarget(sk)) {
-                sk.noTint();
-                return;
-            }
-
-            const grid = sk.grid;
-            sk.background(158);
-
-            if(!grid) {
-                return;
-            }
-
-
-            injectedDrawMethods.forEach((method) => method(sk));
-
-            grid.board.forEach((cell) => cell.grid(sk));
-
-            grid.board.forEach((cell) => cell.draw(sk));
-            if(grid.stack.length && !isInstantMode) {
-                grid.divisionGrid();
-            }
-
-            if(!grid.stack.length && firstEnd) {
-                endTime = new Date();
-                console.log('time:', endTime - startTime);
-                firstEnd = false;
-            }
-
-            ImageService.update(sk.draw);
-
-            // if(!grid.stack.length) {
-            //     background = background || sk.canvas.toDataURL();
-            //
-            //     sk.loadImage(background, (img) => {
-            //         const styles = window.getComputedStyle(sk.canvas)
-            //         const width = +styles.width.replace(/\D/g, '');
-            //         const height = +styles.height.replace(/\D/g, '');
-            //         // sk.image(img, 0, 0, sk.canvas.width/2, sk.canvas.height/2);
-            //         sk.image(img, 0, 0, width, height);
-            //     })
-            // }
+            sk.grid.board.forEach((cell) => cell.draw(sk));
         };
 
-        sk.generateNewGrid = (gridSize) => {
-            sk.grid = new Grid(gridSize || config.NUMBER_OF_CELLS_AND_ROWS, drawModifier);
-
-            while(isInstantMode && sk.grid.stack.length) {
-                sk.grid.divisionGrid();
-            }
-
-            setOuterBorders(sk.grid)
+        sk.drawGrid = () => {
+            sk.grid.board.forEach((cell) => cell.grid(sk));
         };
 
-        sk.setGrid = (newGrid) => {
-            sk.grid = newGrid;
-        };
+        sk.drawAllCells = sk.drawGrid;
 
         sk.getGrid = () => sk.grid;
 

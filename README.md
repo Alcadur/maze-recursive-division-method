@@ -14,19 +14,19 @@ There is no need to run any server, just download `dist` content and open `index
 
 ## Examples
 
-- 25x25 cells - with animation: 7s 673ms, instant: 41ms ()
+- 25x25 cells - with animation: 2s 50ms, instant: 56ms
 ![alt text](readme_assets/maze-25x25.png "25x25-7673")
-- 50x50 cells - with animation: 57s 118ms, instant: 121ms
+- 50x50 cells - with animation: 9s 91ms, instant: 100ms
 ![alt text](readme_assets/maze-50x50.png "50x50-57118ms")
-- 100x100 cells - with animation: 12min 31s 686ms, instant: 288ms
+- 100x100 cells - with animation: 57s 395ms, instant: 205ms
 ![alt text](readme_assets/maze-100x100.png "100x100-751686ms")
 
 
 ## Walkthrough timing
 
-- 25x25 cells - with animation: 4s 530ms, instant: 10ms
+- 25x25 cells - with animation: 10s 822ms, instant: 9ms
 ![alt text](readme_assets/maze-25x25-walkthrough.png "25x25-4530")
-- 50x50 cells - with animation: 1min 49s 7ms, instant: 7ms
+- 50x50 cells - with animation: 40s 454ms, instant: 13ms
 ![alt text](readme_assets/maze-50x50-walkthrough.png "50x50-109007")
-- 100x100 cells - with animation: 1h 5min 29s 88ms,instant: 21ms
+- 100x100 cells - with animation: 2min 38s 7ms,instant: 24ms
 ![alt text](readme_assets/maze-100x100-walkthrough.png "100x100-3605498")
