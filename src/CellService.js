@@ -6,8 +6,8 @@ export default  {
     width: config.cellWidth,
     height: config.cellHeight,
     countNewSize(sizeX, sizeY) {
-        this.width = Math.floor(config.WIDTH/sizeX);
-        this.height = Math.floor(config.HEIGHT/sizeY);
+        this.width = config.WIDTH/sizeX;
+        this.height = config.HEIGHT/sizeY;
     },
     getWidth(modifier) {
         return this.width * modifier;
